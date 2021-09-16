@@ -17,7 +17,7 @@ export const camera: THREE.Camera = new THREE.PerspectiveCamera(
 );
 
 camera.position.setZ(5);
-renderer.setClearColor('#474747');
+renderer.setClearColor(0x474747);
 renderer.setPixelRatio(devicePixelRatio);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
