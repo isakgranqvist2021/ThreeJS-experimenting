@@ -2,6 +2,7 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { addToGui } from './objects';
 export const width = window.innerWidth;
 export const height = window.innerHeight;
 export const depth = 1000;
@@ -18,5 +19,7 @@ camera.position.set(0, 25, 10);
 renderer.setClearColor(0x474747);
 renderer.setPixelRatio(devicePixelRatio);
 renderer.setSize(width, height);
+
+addToGui(camera, 'camera');
 
 document.body.appendChild(renderer.domElement);

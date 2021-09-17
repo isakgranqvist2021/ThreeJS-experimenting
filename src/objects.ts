@@ -5,12 +5,12 @@ import * as dat from 'dat.gui';
 
 const gui = new dat.GUI();
 
-const addToGui = (object: any, label: string): void => {
+export const addToGui = (object: any, label: string): void => {
+	let root = gui.addFolder(label);
 	let min = -1000;
 	let max = 1000;
 	let step = 0.01;
 
-	let root = gui.addFolder(label);
 	let rotation = root.addFolder('rotation');
 	rotation.add(object.rotation, 'x', min, max, step);
 	rotation.add(object.rotation, 'y', min, max, step);
