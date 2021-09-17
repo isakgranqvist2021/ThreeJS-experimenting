@@ -2,57 +2,36 @@
 
 import * as THREE from 'three';
 
-import { scene, camera, renderer, gridHelper, controls } from './init';
-import { newObject } from './objects';
+import { scene, camera, renderer, gridHelper, controls, light } from './init';
+import { newMesh, newSphere } from './objects';
 
-let torus: THREE.Mesh<THREE.TorusGeometry>;
-let lastPressed: string = '';
-let rotation = 0;
+let stars: THREE.Mesh<any, THREE.MeshStandardMaterial>[] = [];
 
 const main = (): void => {
-	const light = new THREE.PointLight(0xffffff);
-	light.position.set(1, 5, 50);
-
-	torus = newObject('torus', `Player`) as THREE.Mesh<THREE.TorusGeometry>;
-	torus.rotation.y = 102.07;
-	window.addEventListener('keydown', (e: KeyboardEvent) => {
-		let speed = 0.5;
-		let kp = e.key;
-		lastPressed = kp;
-
-		if (kp === 'ArrowUp') {
-			torus.position.z -= speed;
-			torus.position.x -= rotation;
-		} else if (kp === 'ArrowDown') {
-			torus.position.z += speed;
-			torus.position.x += rotation;
-		}
-	});
-
-	window.addEventListener('keyup', (e: KeyboardEvent) => {
-		lastPressed = '';
-	});
-
-	scene.add(torus);
 	scene.add(light);
 	scene.add(gridHelper);
+
+	stars = new Array(25).fill(0).map((_: any) => {
+		let geometry = newSphere(0.45);
+		let star = newMesh(geometry, 0xdb9f14);
+		star.position.set(
+			THREE.MathUtils.randInt(-10, 10),
+			THREE.MathUtils.randInt(0, 10),
+			THREE.MathUtils.randInt(-10, 10)
+		);
+		scene.add(star);
+		return star;
+	});
+
 	animate();
 };
 
 const animate = (): void => {
 	requestAnimationFrame(animate);
 
-	if (lastPressed === 'ArrowDown') {
-		torus.rotation.z -= 0.1;
-	} else if (lastPressed === 'ArrowUp') {
-		torus.rotation.z += 0.1;
-	} else if (lastPressed === 'ArrowRight') {
-		torus.rotation.z -= 0.01;
-		rotation = -2;
-	} else if (lastPressed === 'ArrowLeft') {
-		torus.rotation.z += 0.01;
-		rotation = 2;
-	}
+	stars.forEach((star: THREE.Mesh<any, THREE.MeshStandardMaterial>) => {
+		star.rotation.y -= 0.1;
+	});
 
 	controls.update();
 	renderer.render(scene, camera);

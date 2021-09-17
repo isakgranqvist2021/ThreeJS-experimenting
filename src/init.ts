@@ -2,24 +2,23 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { addToGui } from './objects';
-export const width = window.innerWidth;
-export const height = window.innerHeight;
-export const depth = 1000;
 
-const aspect = width / height;
+export const camera = new THREE.PerspectiveCamera(
+	75,
+	window.innerWidth / window.innerHeight,
+	0.1
+);
 
 export const scene = new THREE.Scene();
 export const renderer = new THREE.WebGLRenderer();
-export const gridHelper = new THREE.GridHelper(200, 50);
-export const camera = new THREE.PerspectiveCamera(75, aspect, 0.1);
+export const gridHelper = new THREE.GridHelper(15, 50);
 export const controls = new OrbitControls(camera, renderer.domElement);
+export const light = new THREE.PointLight(0xffffff);
 
-camera.position.set(0, 25, 10);
+camera.position.set(0, 2, 2);
+light.position.set(0, 0, 50);
 renderer.setClearColor(0x474747);
 renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(width, height);
-
-addToGui(camera, 'camera');
+renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
