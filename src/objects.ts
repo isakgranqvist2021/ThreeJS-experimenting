@@ -45,7 +45,7 @@ export const newObject = (
 
 	switch (object) {
 		case 'torus':
-			geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+			geometry = new THREE.TorusGeometry(2, 3, 25, 50);
 			break;
 		case 'cube':
 			geometry = new THREE.BoxGeometry(2, 2, 0.5);
@@ -61,6 +61,7 @@ export const newObject = (
 	}
 
 	let mesh = new THREE.Mesh(geometry, material);
+	mesh.position.setY(4.7);
 	addToGui(mesh, label);
 	return mesh;
 };

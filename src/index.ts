@@ -2,46 +2,38 @@
 
 import * as THREE from 'three';
 
-import { scene, camera, renderer, gridHelper } from './init';
+import { scene, camera, renderer, gridHelper, controls } from './init';
 import { newObject } from './objects';
 
-const spheres: any[] = [];
-const toruses: any[] = [];
+let torus: THREE.Mesh<THREE.TorusGeometry>;
+let lastPressed: string = '';
+let rotation = 0;
 
 const main = (): void => {
 	const light = new THREE.PointLight(0xffffff);
 	light.position.set(1, 5, 50);
 
-	for (let i = 0; i < 1; i++) {
-		toruses.push(newObject('torus', `torus ${i}`));
-	}
-
-	toruses.forEach((sphere: any) => {
-		scene.add(sphere);
-	});
-
+	torus = newObject('torus', `Player`) as THREE.Mesh<THREE.TorusGeometry>;
+	torus.rotation.y = 102.07;
 	window.addEventListener('keydown', (e: KeyboardEvent) => {
-		let torus = toruses[0];
-		let speed = 15;
+		let speed = 0.5;
+		let kp = e.key;
+		lastPressed = kp;
 
-		switch (e.key) {
-			case 'ArrowLeft':
-				torus.position.setX(torus.position.x - speed);
-				return;
-			case 'ArrowRight':
-				torus.position.setX(torus.position.x + speed);
-				return;
-			case 'ArrowUp':
-				torus.position.setY(torus.position.y + speed);
-				return;
-			case 'ArrowDown':
-				torus.position.setY(torus.position.y - speed);
-				return;
-			default:
-				return;
+		if (kp === 'ArrowUp') {
+			torus.position.z -= speed;
+			torus.position.x -= rotation;
+		} else if (kp === 'ArrowDown') {
+			torus.position.z += speed;
+			torus.position.x += rotation;
 		}
 	});
 
+	window.addEventListener('keyup', (e: KeyboardEvent) => {
+		lastPressed = '';
+	});
+
+	scene.add(torus);
 	scene.add(light);
 	scene.add(gridHelper);
 	animate();
@@ -50,12 +42,19 @@ const main = (): void => {
 const animate = (): void => {
 	requestAnimationFrame(animate);
 
-	toruses.forEach((torus: any) => {
-		//	torus.rotation.x += 0.1;
+	if (lastPressed === 'ArrowDown') {
+		torus.rotation.z -= 0.1;
+	} else if (lastPressed === 'ArrowUp') {
+		torus.rotation.z += 0.1;
+	} else if (lastPressed === 'ArrowRight') {
+		torus.rotation.z -= 0.01;
+		rotation = -2;
+	} else if (lastPressed === 'ArrowLeft') {
 		torus.rotation.z += 0.01;
-		torus.rotation.y += 0.01;
-	});
+		rotation = 2;
+	}
 
+	controls.update();
 	renderer.render(scene, camera);
 };
 
