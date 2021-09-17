@@ -2,7 +2,7 @@
 
 import * as THREE from 'three';
 
-import { scene, camera, renderer } from './init';
+import { scene, camera, renderer, gridHelper } from './init';
 import { newObject } from './objects';
 
 const spheres: any[] = [];
@@ -43,6 +43,7 @@ const main = (): void => {
 	});
 
 	scene.add(light);
+	scene.add(gridHelper);
 	animate();
 };
 
