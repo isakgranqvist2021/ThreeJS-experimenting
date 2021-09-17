@@ -27,38 +27,40 @@ const addToGui = (object: any, label: string): void => {
 	scale.add(object.position, 'z', min, max, step);
 };
 
-export const newTorus = (label: string): THREE.Mesh<THREE.TorusGeometry> => {
-	const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-	const material = new THREE.MeshStandardMaterial({
-		color: 0x3480eb,
-	});
-	const torus = new THREE.Mesh(geometry, material);
-	torus.position.setZ(-100);
-	torus.position.setX(
-		Math.floor(Math.random() + 0.5) === 0
-			? Math.random() * -100
-			: Math.random() * 100
-	);
-	addToGui(torus, label);
-	return torus;
-};
+export const newObject = (
+	object: string,
+	label: string
+): THREE.Mesh<
+	| THREE.SphereGeometry
+	| THREE.TorusGeometry
+	| THREE.BoxGeometry
+	| THREE.CylinderGeometry
+> => {
+	let geometry;
 
-export const newCube = (label: string): THREE.Mesh<THREE.BoxGeometry> => {
-	const geometry = new THREE.BoxGeometry(2, 2, 0.5);
-	const material = new THREE.MeshStandardMaterial({
-		color: 0x3480eb,
-	});
-	const cube = new THREE.Mesh(geometry, material);
-	addToGui(cube, label);
-	return cube;
-};
-
-export const newSphere = (label: string): THREE.Mesh<THREE.SphereGeometry> => {
-	const geometry = new THREE.SphereGeometry();
 	const material = new THREE.MeshBasicMaterial({
 		color: 0x3480eb,
+		wireframe: true,
 	});
-	const sphere = new THREE.Mesh(geometry, material);
-	addToGui(sphere, label);
-	return sphere;
+
+	switch (object) {
+		case 'torus':
+			geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+			break;
+		case 'cube':
+			geometry = new THREE.BoxGeometry(2, 2, 0.5);
+			break;
+		case 'sphere':
+			geometry = new THREE.SphereGeometry();
+			break;
+		case 'cylinder':
+			geometry = new THREE.CylinderGeometry();
+			break;
+		default:
+			return;
+	}
+
+	let mesh = new THREE.Mesh(geometry, material);
+	addToGui(mesh, label);
+	return mesh;
 };
