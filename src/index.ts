@@ -3,35 +3,35 @@
 import * as THREE from 'three';
 
 import { scene, camera, renderer, gridHelper, controls, light } from './init';
-import { newMesh, newSphere } from './objects';
+import { newMesh, newSphere, newCube } from './objects';
 
-let stars: THREE.Mesh<any, THREE.MeshStandardMaterial>[] = [];
+let player = {
+	head: newMesh(newSphere(0.1)),
+	body: newMesh(newCube(0.2, 0.55, 0.1)),
+	leftArm: newMesh(newCube(0.25, 0.1, 0.1)),
+	rightArm: newMesh(newCube(0.25, 0.1, 0.1)),
+};
 
 const main = (): void => {
+	let box = new THREE.Box3().setFromObject(player.body);
+
 	scene.add(light);
 	scene.add(gridHelper);
 
-	stars = new Array(25).fill(0).map((_: any) => {
-		let geometry = newSphere(0.45);
-		let star = newMesh(geometry, 0xdb9f14);
-		star.position.set(
-			THREE.MathUtils.randInt(-10, 10),
-			THREE.MathUtils.randInt(0, 10),
-			THREE.MathUtils.randInt(-10, 10)
-		);
-		scene.add(star);
-		return star;
-	});
+	scene.add(player.head);
+	scene.add(player.body);
+	scene.add(player.leftArm);
+	scene.add(player.rightArm);
 
+	player.leftArm.position.x = box.min.x * 2;
+	player.rightArm.position.x = box.max.x * 2;
+	player.head.position.y = box.max.y + 0.1;
+	console.log(box);
 	animate();
 };
 
 const animate = (): void => {
 	requestAnimationFrame(animate);
-
-	stars.forEach((star: THREE.Mesh<any, THREE.MeshStandardMaterial>) => {
-		star.rotation.y -= 0.1;
-	});
 
 	controls.update();
 	renderer.render(scene, camera);
